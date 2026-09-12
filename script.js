@@ -1,0 +1,11 @@
+const menuToggle=document.querySelector(".menu-toggle"),nav=document.querySelector(".nav");
+menuToggle?.addEventListener("click",()=>{const open=nav.classList.toggle("open");menuToggle.setAttribute("aria-expanded",String(open))});
+document.querySelectorAll(".nav a").forEach(link=>link.addEventListener("click",()=>{nav.classList.remove("open");menuToggle?.setAttribute("aria-expanded","false")}));
+const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");observer.unobserve(entry.target)}}),{threshold:.12});
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+const lightbox=document.querySelector(".lightbox"),lightboxImg=lightbox?.querySelector("img");
+const closeLightbox=()=>{lightbox?.classList.remove("open");lightbox?.setAttribute("aria-hidden","true");document.body.classList.remove("locked");if(lightboxImg)lightboxImg.src=""};
+document.querySelectorAll("[data-lightbox]").forEach(button=>button.addEventListener("click",()=>{const src=button.dataset.lightbox,img=button.querySelector("img");if(!lightbox||!lightboxImg)return;lightboxImg.src=src;lightboxImg.alt=img?.alt||"Project preview";lightbox.classList.add("open");lightbox.setAttribute("aria-hidden","false");document.body.classList.add("locked")}));
+document.querySelector(".lightbox-close")?.addEventListener("click",closeLightbox);
+lightbox?.addEventListener("click",e=>{if(e.target===lightbox)closeLightbox()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLightbox()});
